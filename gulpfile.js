@@ -4,6 +4,7 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var wait = require('gulp-wait');
 var rename = require('gulp-rename');
+var strip = require('gulp-strip-comments');
 var autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('scripts', function() {
@@ -30,7 +31,18 @@ gulp.task('styles', function () {
         .pipe(gulp.dest('./css'));
 });
 
+
+// remove comments
+gulp.task('strip', function () {
+    return gulp.src('./index-dev.html')
+      .pipe(wait(250))
+      .pipe(strip())
+      .pipe(rename('./index.html'))
+      .pipe(gulp.dest('./'));
+  });
+
 gulp.task('watch', function() {
     gulp.watch('js/scripts.js', gulp.series('scripts'));
     gulp.watch('scss/styles.scss', gulp.series('styles'));
+    gulp.watch('./index-dev.html', gulp.series('strip'));
 });
